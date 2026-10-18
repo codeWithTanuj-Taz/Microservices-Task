@@ -32,6 +32,14 @@ The ports above are the application ports. The current Compose file publishes po
 
 Each Dockerfile uses Node.js as its base image, sets a working directory, installs dependencies, copies application files, exposes the appropriate port, and defines the startup command.
 
+```
+git clone https://github.com/codeWithTanuj-Taz/Microservices-Task
+
+```
+
+<img width="625" height="62" alt="Screenshot1" src="https://github.com/user-attachments/assets/e24b95c3-0903-4c3e-9689-9722655d37a8" />
+
+
 ### 3.1 User Service Dockerfile
 
 **Location:** `Microservices/user-service/Dockerfile`
@@ -64,6 +72,10 @@ CMD ["node", "app.js"]
 - `EXPOSE 3000` documents the port used by the application.
 - `CMD ["node", "app.js"]` starts the application when the container runs.
 
+<img width="620" height="339" alt="Screenshot7" src="https://github.com/user-attachments/assets/de2cd51d-3348-4ab6-8c0d-4b4c2ce2f849" />
+
+  
+
 ### 3.2 Product Service Dockerfile
 
 **Location:** `Microservices/product-service/Dockerfile`
@@ -86,28 +98,7 @@ EXPOSE 3001
 CMD ["node", "app.js"]
 ```
 
-
-**Location:** `Microservices/order-service/Dockerfile`
-
-Create a file named `Dockerfile` inside the `order-service` directory.
-
-```dockerfile
-FROM node:18-alpine
-
-WORKDIR /app
-
-COPY package*.json ./
-
-RUN npm install --omit=dev
-
-COPY app.js ./
-
-EXPOSE 3002
-
-CMD ["node", "app.js"]
-```
-
-
+<img width="579" height="371" alt="Screenshot8" src="https://github.com/user-attachments/assets/98437f37-bf9d-4238-b81a-0c717d0c2e20" />
 
 **Note:** This Dockerfile documents how to package the Order Service. The current three-service Compose configuration does not start this service.
 
@@ -143,6 +134,9 @@ CMD ["node", "app.js"]
 - `EXPOSE 3003` documents the Gateway port.
 - `CMD ["node", "app.js"]` starts the Gateway.
 
+<img width="835" height="382" alt="Screenshot9" src="https://github.com/user-attachments/assets/3fad4389-04c3-402c-9863-aa3498868e3c" />
+
+
 The Gateway forwards requests to backend services using their Docker Compose service names.
 
 For example:
@@ -151,6 +145,7 @@ For example:
 - Product Service: `http://product-service:3001/products`
 
 These names are resolvable by containers attached to the shared Compose network.
+
 
 ## 4. Docker Compose Configuration
 
@@ -221,6 +216,10 @@ Attaches each service to the same network.
 
 Creates a bridge network for communication between containers on the same Docker host.
 
+<img width="809" height="574" alt="Screenshot10" src="https://github.com/user-attachments/assets/a06dcdc7-f8fc-44e2-bec8-d3ab56d5efc5" />
+
+
+
 ## 5. Prerequisites
 
 Before running the application, install:
@@ -238,6 +237,9 @@ docker --version
 docker compose version
 ```
 
+<img width="646" height="80" alt="Screenshot17" src="https://github.com/user-attachments/assets/1c9ec91d-95bd-4e23-a89b-d82bef70610a" />
+
+
 ## 6. Setup and Execution Instructions
 
 Run all Compose commands from the project root directory, where `docker-compose.yml` is located.
@@ -254,6 +256,9 @@ cd "D:\Devopps Project\Microservices-Task"
 docker compose config
 ```
 
+<img width="547" height="374" alt="Screenshot11" src="https://github.com/user-attachments/assets/fd5627f8-90ce-42cd-82d1-efdf985f9a62" />
+
+
 Docker Compose should display the resolved configuration without validation errors.
 
 ### Step 3: Build and start the services
@@ -261,6 +266,9 @@ Docker Compose should display the resolved configuration without validation erro
 ```powershell
 docker compose up --build -d
 ```
+<img width="642" height="272" alt="Screenshot18" src="https://github.com/user-attachments/assets/60fe73e2-b6c8-40ec-b60d-fea4bb3449c6" />
+
+
 
 This command builds the images and starts the three configured services in detached mode.
 
@@ -269,6 +277,9 @@ This command builds the images and starts the three configured services in detac
 ```powershell
 docker compose ps
 ```
+
+<img width="721" height="152" alt="Screenshot13" src="https://github.com/user-attachments/assets/f8c84d4f-7973-4b23-b4f1-cb6de1abad2e" />
+
 
 The expected services are:
 
@@ -283,6 +294,8 @@ Their status should show that the containers are running.
 ```powershell
 docker compose logs --tail=50
 ```
+<img width="659" height="76" alt="Screenshot19" src="https://github.com/user-attachments/assets/c7b62d76-d8fb-4bec-aab6-a04d3dc400eb" />
+
 
 To view logs for an individual service:
 
@@ -292,13 +305,6 @@ docker compose logs product-service
 docker compose logs gateway-service
 ```
 
-### Step 6: Stop the services
-
-```powershell
-docker compose down
-```
-
-This stops and removes the containers and the Compose-managed network. It does not normally delete the built images.
 
 ## 7. Local Testing and Validation
 
@@ -331,6 +337,9 @@ Expected sample users:
 - John Doe
 - Jane Smith
 
+<img width="662" height="213" alt="Screenshot14" src="https://github.com/user-attachments/assets/644fe57f-4cac-40d0-9d51-fce583a41cbd" />
+
+
 ### 7.2 Product Service
 
 Health check:
@@ -357,6 +366,9 @@ Expected sample products:
 
 - Laptop — 999
 - Phone — 699
+
+<img width="659" height="219" alt="Screenshot15" src="https://github.com/user-attachments/assets/34f9503e-8005-453f-9b7a-686c52f8ff04" />
+
 
 ### 7.3 Gateway Service
 
@@ -386,13 +398,10 @@ Retrieve products through the Gateway:
 Invoke-RestMethod http://localhost:3003/api/products
 ```
 
+<img width="614" height="318" alt="Screenshot16" src="https://github.com/user-attachments/assets/0d7d2326-10bf-4784-b964-244ca6960d1b" />
+
 These requests should return the same sample user and product data as the corresponding backend services. Successful responses confirm that the Gateway can communicate with the User and Product services over the Docker network.
 
-### 7.4 Order Service
-
-The Order Service has a Dockerfile and uses port 3002 in its application configuration. However, it is not part of the current Compose deployment.
-
-Therefore, its container and localhost endpoint are not included in the current three-service validation results. To test it through Docker, it must first be added to the Compose configuration with its dependencies and network settings.
 
 ## 8. Docker Network Verification
 
@@ -407,6 +416,11 @@ Inspect the network created by the Compose project:
 ```powershell
 docker network inspect microservices-task_microservices-network
 ```
+<img width="535" height="116" alt="Screenshot20" src="https://github.com/user-attachments/assets/b52349a5-c596-4af9-b659-81c47ca56bef" />
+
+
+<img width="687" height="139" alt="Screenshot21" src="https://github.com/user-attachments/assets/a683d19e-f32b-4597-84b8-f5eabf8871b7" />
+
 
 The generated network name can vary depending on the Compose project name. If the example name does not exist, use the network name displayed by `docker network ls`.
 
