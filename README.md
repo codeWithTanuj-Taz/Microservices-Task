@@ -17,7 +17,7 @@ Each service has its own Dockerfile, which defines how its Docker image is built
 
 
 
-## 3. Service Details
+## 2. Service Details
 
 | Service | Application port | Purpose |
 |---|---:|---|
@@ -28,11 +28,11 @@ Each service has its own Dockerfile, which defines how its Docker image is built
 
 The ports above are the application ports. The current Compose file publishes ports 3000, 3001, and 3003 on the host.
 
-## 4. Creating the Dockerfiles
+## 3. Clone the repo and Creating the Dockerfiles
 
 Each Dockerfile uses Node.js as its base image, sets a working directory, installs dependencies, copies application files, exposes the appropriate port, and defines the startup command.
 
-### 5.1 User Service Dockerfile
+### 3.1 User Service Dockerfile
 
 **Location:** `Microservices/user-service/Dockerfile`
 
@@ -64,7 +64,7 @@ CMD ["node", "app.js"]
 - `EXPOSE 3000` documents the port used by the application.
 - `CMD ["node", "app.js"]` starts the application when the container runs.
 
-### 5.2 Product Service Dockerfile
+### 3.2 Product Service Dockerfile
 
 **Location:** `Microservices/product-service/Dockerfile`
 
@@ -111,7 +111,7 @@ CMD ["node", "app.js"]
 
 **Note:** This Dockerfile documents how to package the Order Service. The current three-service Compose configuration does not start this service.
 
-### 5.4 Gateway Service Dockerfile
+### 3.3 Gateway Service Dockerfile
 
 **Location:** `Microservices/gateway-service/Dockerfile`
 
@@ -152,7 +152,7 @@ For example:
 
 These names are resolvable by containers attached to the shared Compose network.
 
-## 6. Docker Compose Configuration
+## 4. Docker Compose Configuration
 
 **File location:** `docker-compose.yml` in the project root.
 
@@ -221,7 +221,7 @@ Attaches each service to the same network.
 
 Creates a bridge network for communication between containers on the same Docker host.
 
-## 7. Prerequisites
+## 5. Prerequisites
 
 Before running the application, install:
 
@@ -238,7 +238,7 @@ docker --version
 docker compose version
 ```
 
-## 8. Setup and Execution Instructions
+## 6. Setup and Execution Instructions
 
 Run all Compose commands from the project root directory, where `docker-compose.yml` is located.
 
@@ -300,11 +300,11 @@ docker compose down
 
 This stops and removes the containers and the Compose-managed network. It does not normally delete the built images.
 
-## 9. Local Testing and Validation
+## 7. Local Testing and Validation
 
 Use the following PowerShell commands to verify that each deployed service is accessible through `localhost`.
 
-### 9.1 User Service
+### 7.1 User Service
 
 Health check:
 
@@ -331,7 +331,7 @@ Expected sample users:
 - John Doe
 - Jane Smith
 
-### 9.2 Product Service
+### 7.2 Product Service
 
 Health check:
 
@@ -358,7 +358,7 @@ Expected sample products:
 - Laptop — 999
 - Phone — 699
 
-### 9.3 Gateway Service
+### 7.3 Gateway Service
 
 Health check:
 
@@ -388,13 +388,13 @@ Invoke-RestMethod http://localhost:3003/api/products
 
 These requests should return the same sample user and product data as the corresponding backend services. Successful responses confirm that the Gateway can communicate with the User and Product services over the Docker network.
 
-### 9.4 Order Service
+### 7.4 Order Service
 
 The Order Service has a Dockerfile and uses port 3002 in its application configuration. However, it is not part of the current Compose deployment.
 
 Therefore, its container and localhost endpoint are not included in the current three-service validation results. To test it through Docker, it must first be added to the Compose configuration with its dependencies and network settings.
 
-## 10. Docker Network Verification
+## 8. Docker Network Verification
 
 List Docker networks:
 
@@ -411,83 +411,6 @@ docker network inspect microservices-task_microservices-network
 The generated network name can vary depending on the Compose project name. If the example name does not exist, use the network name displayed by `docker network ls`.
 
 The User, Product, and Gateway containers should be attached to the same Compose network.
-
-## 11. Basic Troubleshooting
-
-### Issue 1: Docker Compose cannot find the configuration file
-
-**Error:**
-
-```text
-no configuration file provided: not found
-```
-
-**Solution:**
-
-Navigate to the directory containing `docker-compose.yml`:
-
-```powershell
-cd "D:\Devopps Project\Microservices-Task"
-```
-
-Confirm that the file exists:
-
-```powershell
-Get-ChildItem docker-compose.yml
-```
-
-Then validate the configuration:
-
-```powershell
-docker compose config
-```
-
-### Issue 2: YAML validation error
-
-**Solution:**
-
-- Check indentation.
-- Use spaces instead of tabs.
-- Ensure the top-level `services:` and `networks:` keys start at the beginning of their lines.
-- Confirm that each build path points to the correct service directory.
-
-### Issue 3: Container exits or fails to start
-
-Check the container status:
-
-```powershell
-docker compose ps
-```
-
-Inspect the logs:
-
-```powershell
-docker compose logs --tail=100
-```
-
-Check for missing dependencies, application errors, or incorrect Dockerfile instructions.
-
-### Issue 4: Localhost endpoint is inaccessible
-
-- Confirm that the relevant container is running.
-- Check the port mappings in `docker-compose.yml`.
-- Ensure the host port is not already being used by another process.
-- Review the service logs.
-
-### Issue 5: Gateway cannot reach a backend service
-
-- Confirm that the User and Product services are running.
-- Confirm that all three services share `microservices-network`.
-- Verify that the Gateway uses the correct service names and container ports.
-- Inspect Gateway logs:
-
-```powershell
-docker compose logs gateway-service
-```
-
-### Issue 6: A host port is already in use
-
-Stop the application occupying that port or change the host side of the port mapping. For example, `"3100:3000"` exposes container port 3000 on host port 3100.
 
 ## 12. Screenshots and Evidence
 
